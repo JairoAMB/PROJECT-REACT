@@ -1,14 +1,39 @@
-
-import './App.css'
+import './App.css';
+import Login from './pages/Login/Login';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [showContent, setShowContent] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+
+    const timer = setTimeout(() => {
+      setShowContent(false); 
+      setShowLogin(true); 
+    }, 3000); 
+
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
-      <h1 className='text-emerald-600'>Tailwind</h1>
-      <p className='text-red-800'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta totam illo cumque quidem accusantium quas? Eligendi, nobis laboriosam est error voluptatem quis reiciendis corporis accusamus, itaque impedit, sit explicabo natus?</p>
+      <div className="App">
+        {showContent && (
+          <div className="centered fade-in">
+            <div className="title">
+              FLATVISION
+            </div>
+            <div className="subtitle">
+              LUGAR DE COMODIDAD Y LUJO
+            </div>
+          </div>
+        )}
+      </div>
+      {showLogin && <Login />} {}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
