@@ -1,14 +1,18 @@
-
-import './App.css'
+import './App.css';
+import {Login} from './pages/Login/Login';
+import {Register} from './pages/Register/Register'
+import {Route, Routes} from "react-router-dom";
 
 function App() {
-
+  
   return (
     <>
-      <h1 className='text-emerald-600'>Tailwind</h1>
-      <p className='text-red-800'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta totam illo cumque quidem accusantium quas? Eligendi, nobis laboriosam est error voluptatem quis reiciendis corporis accusamus, itaque impedit, sit explicabo natus?</p>
+      <Routes>
+        <Route path="/" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
