@@ -20,6 +20,9 @@ export const UserForm = () => {
     const birthDateRef = useRef();
     const emailRef = useRef();
 
+    // instancia de la clase UserService
+    const userService = new UserService();
+
     // Mensaje para password
     const footer = (
         <>
@@ -47,9 +50,8 @@ export const UserForm = () => {
         }
         
         // Guardar informacion en firebase
-        const userService = new UserService();
         const result = await userService.createUser(newUser);
-        
+        // console.log('result',result)
     }
 
   return (
@@ -79,7 +81,7 @@ export const UserForm = () => {
             <Password inputId="confirm-password" value={confirmpassword} onChange={(e) => setConfirmPassword(e.target.value)} footer={footer} type={'password'} required toggleMask/>
             <label htmlFor="confirm-password">Password</label>
         </FloatLabel>
-        <Button type={'submit'} label="Submit" />
+        <Button type={'submit'} label="Register" />
       </form>
     </>
   );

@@ -1,5 +1,5 @@
-import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
+import { addDoc, collection } from 'firebase/firestore'
 
 export class UserService {
     constructor () {
@@ -9,9 +9,9 @@ export class UserService {
     async createUser (user) {
         const userCollectionRef = collection(db, "Users")
         try {
-            await addDoc( userCollectionRef, user )
-            return 1
-        }catch {
+            const result = await addDoc( userCollectionRef, user )
+            return {data:{...user,id:result.id}}
+        }catch(error) {
 
         }
     }
