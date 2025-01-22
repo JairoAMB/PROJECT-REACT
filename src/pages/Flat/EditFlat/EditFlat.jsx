@@ -2,6 +2,7 @@ import React from "react";
 import { FlatForm } from "../Components/FlatForm/FlatForm";
 
 export const EditFlat = () => {
+    
   return (
     <>
       <div className="relative w-screen h-screen max-w-[1440px]">

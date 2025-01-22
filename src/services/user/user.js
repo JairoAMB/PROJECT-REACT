@@ -1,5 +1,5 @@
 import { db } from '../firebase/firebase.js'
-import { addDoc, collection } from 'firebase/firestore'
+import { collection, addDoc, query, getDocs, where } from 'firebase/firestore'
 
 export class UserService {
     constructor () {
@@ -7,32 +7,37 @@ export class UserService {
     }
 
     async createUser (user) {
-        const userCollectionRef = collection(db, "Users")
+        const userCollectionRef = collection(db, "Users");
+        const setQuery = query(userCollectionRef, where("email","==",user.email));
         try {
-            const result = await addDoc( userCollectionRef, user )
-            return {data:{...user,id:result.id}}
-        }catch(error) {
+            const resultQuery = await getDocs(setQuery);
+            if(resultQuery.empty) {
+                const result = await addDoc( userCollectionRef, user )
+                return {data:{...user, id:result.id , password:''}, message: 'Usser created succesfully'}
+            }else {
+                return {data: null, message: 'User already exists' };
+            }
 
+        }catch(error) {
+            return {data: null, message: 'Error creating user'};
         }
     }
 
-    async login(email, password) {
-
+    async login({email, password}) {
         const userCollectionRef = collection(db, "Users");
-        const setQuery = query(userCollectionRef, where("email", "==", email),where("password", "==", password));
+        const setQuery = query(userCollectionRef, where("email","==",email), where("password", "==", password));
         try{
             const resultQuery = await getDocs(setQuery);
-            if (!resultQuery.empty) {
+            if(!resultQuery.empty){
                 const userResult = resultQuery.docs[0].data();
-                return {data: {...userResult,password:''}, message: 'User login successfully.'};
-            }else{
-                return {data: null, message: 'Incorrect email or password'};
+                const id = resultQuery.docs[0].id
+                return {data:{...userResult, id:id, password:''} , message: 'User logged successfully.'}
+            }else {
+                return {data: null, message: 'Incorrect email or password' };
             }
-        }catch (error) {
+        }catch(error){
             return {data: null, message: 'Incorrect email or password'};
         }
-      
-
     }
 
 }
