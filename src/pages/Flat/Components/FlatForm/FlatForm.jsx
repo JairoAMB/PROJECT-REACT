@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // Libreria de componentes
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from 'primereact/inputnumber';
@@ -7,8 +8,11 @@ import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 // importar los servicios de flat para crear flat en firebase
 import { FlatService } from '../../../../services/flat/flat.js'
+import { LocalStorageService } from "../../../../services/localStorage/localStorage.js";
 
 export const FlatForm = () => {
+
+  const navigation = useNavigate();
   //Referencias a los inputs
   const cityRef = useRef();
   const streetNameRef = useRef(); 
@@ -21,12 +25,13 @@ export const FlatForm = () => {
 
   // instancia de la clase flatService
   const flatService = new FlatService();
-
+  const localStorageService = new LocalStorageService();
 
   // funcion submit formulario
   const submit = async (event)=> {
     event.preventDefault();
 
+    const userlogged = localStorageService.getLoggedUser();
     const flat = {
       city: cityRef.current?.value,
       streetName: streetNameRef.current?.value,
@@ -35,11 +40,13 @@ export const FlatForm = () => {
       ac: acChecked,
       yearBuilt: yearBuilt,
       rentPrice: rentPrice,
-      dateAvailable: date, 
+      dateAvailable: date,
+      createdBy: userlogged.id
     }
-
+    
     const result = await flatService.createFlat(flat)
-    console.log('result' ,result)
+    console.log('result' ,result);
+    navigation('/')
   }
 
   return (

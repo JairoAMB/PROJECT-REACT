@@ -1,7 +1,7 @@
 // IMagen svg logo
 import { Imagotipo1 } from "../../assets/svg/Imagotipo1"
 // componente formulario
-import { UserForm } from "./UserForm/UserForm"
+import { UserForm } from "../../components/UserForm/UserForm"
 
 export const Register = () => {
     return(

@@ -12,6 +12,7 @@ export default {
         'login': "url('/src/assets/Img/login.jpg')",
         'newflat': "url('/src/assets/Img/newFlat.jpg')",
         'editflat': "url('/src/assets/Img/editFlat.jpg')",
+        'profile': "url('/src/assets/Img/profile.jpg')"
       },
       backgroundColor:({ theme }) => ({
         ...theme('colors'),

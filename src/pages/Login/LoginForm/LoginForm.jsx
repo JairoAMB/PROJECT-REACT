@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // Libreria de componentes
 import { Password } from 'primereact/password';
 import { FloatLabel } from 'primereact/floatlabel';
@@ -13,6 +14,7 @@ export const LoginForm = () => {
     // referencias a los inputs
     const emailRef = useRef();
     const [password, setPassword] = useState('');
+    const navigation = useNavigate();
 
     // instancias del servicio user y localStorage
     const userService = new UserService();
@@ -29,6 +31,7 @@ export const LoginForm = () => {
         const result = await userService.login(usserLogged);
         if( result.data != null ) {
             localstorageService.addLoggedUser(result.data);
+            navigation('/')
             alert(result.message);
         } else {
             alert(result.message);

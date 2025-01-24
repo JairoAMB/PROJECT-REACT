@@ -1,5 +1,6 @@
+import { data } from 'react-router-dom';
 import { db } from '../firebase/firebase.js'
-import { collection, addDoc, query, getDocs, where } from 'firebase/firestore'
+import { collection, addDoc, query, getDocs, where, doc, getDoc, updateDoc } from 'firebase/firestore'
 
 export class UserService {
     constructor () {
@@ -38,6 +39,22 @@ export class UserService {
         }catch(error){
             return {data: null, message: 'Incorrect email or password'};
         }
+    }
+
+    async getUser(id) {
+        const userDocRef = doc(db, 'Users', id);
+        const result = await getDoc(userDocRef);
+        return {data: result.data()}
+    }
+
+    async updateUser (user, id) {
+        const userDocRef = doc(db, 'Users', id);
+        if (user.password === '') {
+            delete user.password;
+        }
+
+        await updateDoc(userDocRef, user);
+        return {data: {...user, id, password:''}, message: 'usser updated successfully'}
     }
 
 }

@@ -10,7 +10,7 @@ export class FlatService  {
         const flatsCollectionRef = collection(db, "Flats");
         try {
             const result = await addDoc(flatsCollectionRef, flat);
-            return {data:{...flat, id:result.id}}
+            return {data:{...flat, id:result.id}, message: 'flat created successfully'}
         }catch(error) {
 
         }
