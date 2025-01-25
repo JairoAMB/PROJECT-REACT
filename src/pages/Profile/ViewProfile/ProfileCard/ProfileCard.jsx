@@ -52,14 +52,24 @@ export const ProfileCard = ({ id }) => {
     }
 
     // Formatear la fecha de nacimiento
-    const formatBirthDate = (dateString) => {
-        if (!dateString) return 'Fecha no disponible';
-        const date = new Date(dateString);
+    const formatBirthDate = (date) => {
+        if (!date) return 'Fecha no disponible';
+
+        if ( typeof(date) === 'object'  ) {
+            const newdate = new Date(date.seconds*1000);
+            return new Intl.DateTimeFormat('es-ES', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            }).format(newdate);
+        }
+
+        const newdate = new Date(date);
         return new Intl.DateTimeFormat('es-ES', {
             day: '2-digit',
             month: 'long',
             year: 'numeric',
-        }).format(date);
+        }).format(newdate);
     };
 
     const handleNavigate = () => {

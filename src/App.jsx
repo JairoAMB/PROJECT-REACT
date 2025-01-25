@@ -18,11 +18,14 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/profile" element={<ViewProfile />} />
+        <Route path="/profile/:id" element={<ViewProfile />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
         <Route path="/update-profile/:id" element={<UpdateProfile />} />
         <Route path="/new-flat" element={<NewFlat/>} />
-        <Route path="/edit-flat" element={<EditFlat />} />
         <Route path="/view-flat" element={<ViewFlat/>} />
+        <Route path="/view-flat/:flatId" element={<ViewFlat/>} />
+        <Route path="/edit-flat" element={<EditFlat />} />
+        <Route path="/edit-flat/:flatId" element={<EditFlat />} />
 
       </Routes>
     </>

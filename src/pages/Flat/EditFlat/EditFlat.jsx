@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { FlatForm } from "../Components/FlatForm/FlatForm";
 
 export const EditFlat = () => {
-    
+
+  // obtener el id del piso
+  let { flatId } = useParams();
+  const navigation = useNavigate();
+
+  // Si no se envia ningun flatid retornar a home
+  const checkFlatId = () => {
+    if (!flatId) {
+      navigation('/')
+    }
+  }
+
+  useEffect(()=>{
+    checkFlatId();
+  },[])
+
   return (
     <>
       <div className="relative w-screen h-screen max-w-[1440px]">
@@ -12,7 +28,7 @@ export const EditFlat = () => {
             <span className="self-start ml-3 font-Montserrat font-bold text-primary_text text-base sm:text-2xl">
               Edit Flat
             </span>
-            <FlatForm />
+            <FlatForm flatId={ flatId }/>
           </section>
         </div>
       </div>
