@@ -18,9 +18,18 @@ export class ImagesService {
 
     async profileImage () {
         try{
-            const response = await axios(`https://randomuser.me/api/`);
+            const response = await axios.get(`https://randomuser.me/api/`);
             return response.data.results[0].picture.large
         }catch (error) {
+            return null;
+        }
+    }
+
+    async review () {
+        try{
+            const response = await axios.get('https://dummyjson.com/comments?limit=5&select=body,postId');
+            return response.data.comments;
+        }catch(error){
             return null;
         }
     }

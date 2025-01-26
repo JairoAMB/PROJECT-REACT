@@ -32,6 +32,7 @@ export default {
         'secondary_text': '#7D7C83',
         'white_text': '#EFEFF0',
         'text_danger': '#FC4C49',
+        'text-primary-color': '#F26018',
       }),
       fontFamily: {
         Montserrat:['"Montserrat"'],

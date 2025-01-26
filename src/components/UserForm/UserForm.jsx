@@ -134,7 +134,6 @@ export const UserForm = ({id}) => {
         </FloatLabel>
         {/* input birth date */}
         <FloatLabel className="flex flex-col justify-center items-center">
-          {/* <Calendar className="w-[276px]" inputId="birth_date" value={typeForm === 'update' ?  convertFireBaseDate(user.birthDate) : date} onChange={(e) => setDate(e.value)} dateFormat="yy-mm-dd" required/> */}
           <Calendar className="w-[276px]" inputId="birth_date" value={ date } onChange={(e) => setDate(e.value)} dateFormat="yy-mm-dd" required/>
           <label htmlFor="birth_date" className="font-bold mb-2">Birth Date</label>
           <small id="birth_date-help" className="mt-2 font-Opensans text-text_danger text-xs hidden">
