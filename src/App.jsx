@@ -7,14 +7,15 @@ import { UpdateProfile } from './pages/Profile/UpdateProfile/UpdateProfile';
 import { NewFlat } from './pages/Flat/NewFlat/NewFlat';
 import { EditFlat } from './pages/Flat/EditFlat/EditFlat';
 import { ViewFlat } from './pages/Flat/ViewFlat/ViewFlat';
-import { Home } from './pages/Home/Home';
+import { Home } from './pages/Main/Home/Home';
+import { Favorites } from './pages/Main/Favorites/Favorites';
+import { MyFlats } from './pages/Main/MyFlats/MyFlats';
 
 function App() {
   
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/profile" element={<ViewProfile />} />
@@ -26,7 +27,9 @@ function App() {
         <Route path="/view-flat/:flatId" element={<ViewFlat/>} />
         <Route path="/edit-flat" element={<EditFlat />} />
         <Route path="/edit-flat/:flatId" element={<EditFlat />} />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/favotites" element={<Favorites/>} />
+        <Route path="/myflats" element={<MyFlats />} />
       </Routes>
     </>
   );

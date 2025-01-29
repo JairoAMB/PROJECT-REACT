@@ -35,9 +35,5 @@ export const Register = () => {
             </div>
         </>
     )
-}
-
-
-
-        
+}      
 

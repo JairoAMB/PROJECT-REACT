@@ -57,4 +57,17 @@ export class UserService {
         return {data: {...user, id, password:''}, message: 'usser updated successfully'}
     }
 
+    async getUsers () {
+        const usersCollectionRef = collection(db, 'Users');
+        const setQuery = query(usersCollectionRef);
+
+        try{
+            const resultQuery = await getDocs(setQuery);
+            const users = resultQuery.docs.map((doc)=>({...doc.data(), id:doc.id}));
+            return {data: users, message:'users gotten successfully'}
+        }catch(error){
+            return {data: null, message: 'Error getting users' };
+        }
+    }
+
 }
