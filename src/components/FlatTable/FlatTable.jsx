@@ -12,12 +12,17 @@ import { FlatService } from "../../services/flat/flat";
 import { UserService } from "../../services/user/user";
 import { LocalStorageService } from "../../services/localStorage/localStorage";
 
-export const FlatTable = () => {
+export const FlatTable = ({ userLoggedId }) => {
+  let typeTable = "home";
+  if (userLoggedId) {
+    typeTable = "favorites";
+  }
+
   const navigate = useNavigate();
   const [flats, setFlats] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-    //filtros
+  //filtros
   const [filters, setFilters] = useState({
     city: null,
     minPrice: null,
@@ -25,7 +30,7 @@ export const FlatTable = () => {
     minArea: null,
     maxArea: null,
   });
-    // ordenamiento 
+  // ordenamiento
   const [sortField, setSortField] = useState("city");
   const [sortOrder, setSortOrder] = useState("asc");
 
@@ -42,7 +47,7 @@ export const FlatTable = () => {
     const response = await flatService.getFlats(filters, sortField, sortOrder);
     setFlats(response.data);
     setLoading(false);
-    // console.log(response.data);
+    console.log(response.data);
   };
 
   // funcion para obtener a todos los usuarios
@@ -51,8 +56,23 @@ export const FlatTable = () => {
     setUsers(response.data);
   };
 
+  const getFavoriteFlats = async () => {
+    setLoading(true);
+    const response = await flatService.getFavoriteFlats(userLogged.id);
+    const favoriteFlats = response.data.map((flat) => flat.data);
+    console.log(favoriteFlats);
+    setFlats(favoriteFlats);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    getFlats();
+    if (typeTable === "home") {
+      getFlats();
+      console.log(typeTable);
+    } else if (typeTable === "favorites") {
+      getFavoriteFlats();
+      console.log(typeTable);
+    }
   }, [filters, sortField, sortOrder]);
 
   useEffect(() => {
@@ -219,6 +239,10 @@ export const FlatTable = () => {
     } else {
       const result = await flatService.removeFavoriteFlat(favoriteFlat);
       setIsFavorite(false);
+      // Si estamos en la vista "favorites", eliminamos el piso del estado
+      if (typeTable === "favorites") {
+        setFlats((prevFlats) => prevFlats.filter((flat) => flat.id !== rowData.id));
+      }
     }
   };
 
@@ -279,19 +303,21 @@ export const FlatTable = () => {
           <DataTable
             size="small"
             scrollable
-            tableStyle={{ minWidth: '50rem' }}
+            tableStyle={{ minWidth: "50rem" }}
             dataKey="id"
             value={flats}
             stripedRows
             showGridlines
+            loading={loading}
             paginator
             rows={10}
-            filterDisplay="row"
-            loading={loading}
-            header={header}
-            onSort={onSort} 
-            sortField={sortField} 
-            sortOrder={sortOrder}
+            {...(typeTable === "home" && {
+              filterDisplay: "row",
+              header: header,
+              onSort: onSort,
+              sortField: sortField,
+              sortOrder: sortOrder,
+            })}
             emptyMessage="No flats found."
           >
             <Column

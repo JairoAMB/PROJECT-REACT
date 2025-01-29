@@ -28,7 +28,7 @@ function App() {
         <Route path="/edit-flat" element={<EditFlat />} />
         <Route path="/edit-flat/:flatId" element={<EditFlat />} />
         <Route path="/" element={<Home />} />
-        <Route path="/favotites" element={<Favorites/>} />
+        <Route path="/favorites" element={<Favorites/>} />
         <Route path="/myflats" element={<MyFlats />} />
       </Routes>
     </>

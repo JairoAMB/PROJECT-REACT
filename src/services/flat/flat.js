@@ -17,9 +17,19 @@ export class FlatService  {
     }
 
     async getFlatbyId(flatId) {
-        const flatDocRef = doc(db, 'Flats', flatId);
-        const result = await getDoc(flatDocRef);
-        return {data: result.data()};
+        try{
+            const flatDocRef = doc(db, 'Flats', flatId);
+            const result = await getDoc(flatDocRef);
+
+            if(!result.exists()) {
+                return { data: null, message: `Flat with ID ${flatId} not found` };
+            }
+            
+            return {data: { ...result.data(), id: flatId }};
+
+        }catch(error){
+            return { data: null, message: 'Error retrieving Flat', error };
+        }
     }
 
     async updateFlat(flat, flatId) {
@@ -67,6 +77,29 @@ export class FlatService  {
             return {data: flats, message:'flats gotten successfully'}
         }catch(error){
             return {data: null, message: 'Error getting flats' };
+        }
+    }
+
+    async getFavoriteFlats(userLoggedId) {
+        const favoritesFlatsCollectionRef = collection(db, 'FavoriteFlats');
+        const setQuery = query(favoritesFlatsCollectionRef, where("userLoggedId", "==", userLoggedId));
+
+        try{
+            const queryResult = await getDocs(setQuery);
+
+            if (queryResult.empty) {
+                console.log('empty')
+                return { data: [], message: 'No favorite Flats' };
+            }
+
+            const flatsIds = queryResult.docs.map((flat)=> flat.data().flatId);
+            
+            const flats = await Promise.all(flatsIds.map((flatId)=> this.getFlatbyId(flatId)));
+            const validFlats = flats.filter(flat => flat.data !== null);
+            return { data: validFlats, message: 'Favorite Flats retrieved successfully' };
+
+        }catch (error){
+            return {data: null, message: 'Error founding Favorite Flats' };
         }
     }
 
