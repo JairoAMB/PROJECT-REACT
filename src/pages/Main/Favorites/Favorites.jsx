@@ -1,12 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { FlatTable } from "../../../components/FlatTable/FlatTable";
 // servicios
 import { LocalStorageService } from "../../../services/localStorage/localStorage";
 
 export const Favorites = () => {
 
+    // variables de estado
+    const navigation = useNavigate();
+
     // Servicios
     const localStorageService = new LocalStorageService();
     const userLogged = localStorageService.getLoggedUser();
+
 
     return(
         <>

@@ -80,6 +80,18 @@ export class FlatService  {
         }
     }
 
+    async getMyFlats (userLoggedId) {
+        const myflatsCollectionRef = collection(db, 'Flats')
+        const setQuery = query(myflatsCollectionRef, where("createdBy", "==", userLoggedId ))
+        try{
+            const resultQuery = await getDocs(setQuery);
+            const flats = resultQuery.docs.map((flat)=>({...flat.data(), id:flat.id}));
+            return {data: flats, message: 'flats gotten successfully'}
+        }catch( error ){
+            return {data: null, message: 'error getting flats'}
+        }
+    }   
+
     async getFavoriteFlats(userLoggedId) {
         const favoritesFlatsCollectionRef = collection(db, 'FavoriteFlats');
         const setQuery = query(favoritesFlatsCollectionRef, where("userLoggedId", "==", userLoggedId));
@@ -140,4 +152,23 @@ export class FlatService  {
         }
     }
 
+    async deleteFlat (flatId) {
+        try{
+            const flatDocRef = doc(db, 'Flats', flatId);
+            const result = await getDoc(flatDocRef);
+
+            if(!result.exists()) {
+                return { data: null, message: `Flat with ID ${flatId} not found` };
+            }
+
+            await deleteDoc(flatDocRef)
+            return { data: true, message: `Flat with ID ${flatId} deleted successfully` };
+
+        }catch(error) {
+            return { data: null, message: 'Error retrieving Flat', error };
+        }   
+
+    }
+
 }
+
