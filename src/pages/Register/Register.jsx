@@ -17,7 +17,7 @@ export const Register = () => {
                         <span className="mt-8 font-Opensans font-normal text-sm text-primary_text">
                             Already have an Account?
                         </span>
-                        <a href="/" target="_blank" rel="noopener noreferrer" className="text-primary_text border rounded-md px-8 py-1 bg-white/60 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">Sign In</a>
+                        <a href="/login" target="_parent" rel="noopener noreferrer" className="text-primary_text border rounded-md px-8 py-1 bg-white/60 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">Sign In</a>
                     </div>
                 </div>
                 <div className="absolute inset-0 flex justify-center items-center md:static md:flex-1 md:bg-register-bg md:bg-cover md:bg-center">

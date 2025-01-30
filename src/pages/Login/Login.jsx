@@ -15,7 +15,7 @@ export const Login = () => {
                     <LoginForm />
                     <div className="flex flex-col items-center">
                         <span className="text-white_text/60 font-Opensans font-normal text-xs">Don't you have an account?</span>
-                        <a href="/register" target="_blank" className="text-white_text font-Lora font-bold hover:opacity-55">Sign Up</a>
+                        <a href="/register" target="_parent" className="text-white_text font-Lora font-bold hover:opacity-55">Sign Up</a>
                     </div>
                 </section>
             </div>
