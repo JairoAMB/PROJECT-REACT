@@ -1,11 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// Libreria de componentes
 import { Password } from 'primereact/password';
 import { FloatLabel } from 'primereact/floatlabel';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-//  Servicios
 import { UserService } from "../../../services/user/user";
 import { LocalStorageService } from "../../../services/localStorage/localStorage";
 
@@ -62,8 +60,3 @@ export const LoginForm = () => {
         </>
     );
 }
-
-
-
-
-    
