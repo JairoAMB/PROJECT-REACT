@@ -1,6 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { FlatTable } from "../../../components/FlatTable/FlatTable";
+import { LocalStorageService } from "../../../services/localStorage/localStorage";
+import { useEffect } from "react";
 
 export const Home = ()=> {
+
+    const localStorageService = new LocalStorageService();
+    const navigate = useNavigate();
+    useEffect(() =>{
+        if (!localStorageService.checkLoggedUser()){
+            navigate('/login');
+        }
+    })
 
     return(
         <>

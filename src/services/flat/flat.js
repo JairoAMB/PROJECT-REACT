@@ -182,5 +182,24 @@ export class FlatService  {
 
     }
 
+    async deleteUserFlats(userId) {
+        try {
+            const flatsCollectionRef = collection(db, "Flats");
+            const setQuery = query(flatsCollectionRef, where("createdBy", "==", userId));
+            const querySnapshot = await getDocs(setQuery);
+    
+            const deletePromises = querySnapshot.docs.map(async (flatDoc) => {
+                await deleteDoc(doc(db, "Flats", flatDoc.id));
+            });
+    
+            await Promise.all(deletePromises); // Esperar a que todas las eliminaciones terminen
+    
+            return { success: true, message: "User's flats deleted successfully" };
+        } catch (error) {
+            console.error("Error deleting user's flats:", error);
+            return { success: false, message: "Error deleting user's flats" };
+        }
+    }
+
 }
 

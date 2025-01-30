@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
 import { InputNumber } from "primereact/inputnumber";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
 // servicios
 import { UserService } from "../../../services/user/user";
 import { FlatService } from "../../../services/flat/flat";
@@ -16,6 +18,7 @@ export const UsersTable = ({userLoggedId}) => {
     const [users, setUsers] = useState([]);
     const [flats, setFlats] = useState([]);
     const [loading, setLoading] = useState(false);
+    const toast = useRef(null);
 
     //filtros
     const [filters, setFilters] = useState({
@@ -146,12 +149,137 @@ export const UsersTable = ({userLoggedId}) => {
         );
     }
 
-    const tasksBodyTemplate = (rowData) => {
+    const confirmAdminFlat = async (userRow) => {
+        confirmDialog({
+            message: "Are you sure you want to change this user's role?",
+            header: "Role Confirmation",
+            icon: "pi pi-exclamation-triangle",
+            acceptClassName: "p-button-success",
+            accept: async () => {
+                const newRole = userRow.role === "admin" ? "user" : "admin";
+                const result = await userService.setUserAdmin(userRow.id, newRole);
+    
+                if (result.success) {
 
+                    setUsers((prevUsers) =>
+                        prevUsers.map((user) =>
+                            user.id === userRow.id ? { ...user, role: newRole } : user
+                        )
+                    );
+                    toast.current.show({
+                        severity: "success",
+                        summary: "Success",
+                        detail: `User role changed to ${newRole}`,
+                        life: 3000,
+                    });
+                } else {
+                    toast.current.show({
+                        severity: "error",
+                        summary: "Error",
+                        detail: "Failed to change user role",
+                        life: 3000,
+                    });
+                }
+            },
+            reject: () => {
+                toast.current.show({
+                    severity: "warn",
+                    summary: "Cancelled",
+                    detail: "Role change cancelled",
+                    life: 3000,
+                });
+            },
+        });
+    };
+
+    const tasksBodyTemplate = (rowData) => {
+        return (
+            <Button
+              onClick={() => confirmAdminFlat(rowData)}
+              type="button"
+              icon="pi pi-user-plus"
+              rounded
+              className=""
+            ></Button>
+          );
+    }
+
+    const confirmDeleteUser = (userId) => {
+        if (userId === userLoggedId) {
+            toast.current.show({
+                severity: "warn",
+                summary: "Action not allowed",
+                detail: "You cannot delete yourself",
+                life: 3000,
+            });
+            return;
+        }
+    
+        confirmDialog({
+            message: "Are you sure you want to delete this User? This will also delete all their flats.",
+            header: "Delete Confirmation",
+            icon: "pi pi-exclamation-triangle",
+            acceptClassName: "p-button-danger",
+            accept: async () => {
+                const flatDeletion = await flatService.deleteUserFlats(userId);
+                
+                if (!flatDeletion.success) {
+                    toast.current.show({
+                        severity: "error",
+                        summary: "Error",
+                        detail: "Failed to delete user's flats",
+                        life: 3000,
+                    });
+                    return;
+                }
+    
+                const userDeletion = await userService.deleteUser(userId);
+    
+                if (userDeletion.success) {
+                    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    
+                    toast.current.show({
+                        severity: "success",
+                        summary: "Deleted",
+                        detail: "User and their flats deleted successfully",
+                        life: 3000,
+                    });
+                } else {
+                    toast.current.show({
+                        severity: "error",
+                        summary: "Error",
+                        detail: "Failed to delete user",
+                        life: 3000,
+                    });
+                }
+            },
+            reject: () => {
+                toast.current.show({
+                    severity: "warn",
+                    summary: "Cancelled",
+                    detail: "User deletion cancelled",
+                    life: 3000,
+                });
+            }
+        });
+    };
+
+    const deleteBodyTemplate = (rowData) => {
+        return (
+            <Button
+              onClick={() => confirmDeleteUser(rowData.id)}
+              type="button"
+              icon="pi pi-trash"
+              rounded
+              className="bg-danger_color"
+            ></Button>
+          );
     }
 
     return(
-        <>
+        <>  
+            <Toast ref={toast} />
+            <ConfirmDialog />
             <DataTable
                 size="small"
                 scrollable
@@ -217,6 +345,11 @@ export const UsersTable = ({userLoggedId}) => {
                     header="Tasks"
                     style={{ width: "15%" }}
                     body={tasksBodyTemplate}
+                ></Column>
+                <Column
+                    header="Delete"
+                    style={{ width: "15%" }}
+                    body={deleteBodyTemplate}
                 ></Column>
             </DataTable>
         </>

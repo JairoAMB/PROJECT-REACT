@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // Servicios
 import { LocalStorageService } from "../../services/localStorage/localStorage";
@@ -6,29 +6,41 @@ import { UserService } from "../../services/user/user";
 import { UsersTable } from "./UsersTable/UsersTable";
 
 export const AllUsers = () => {
-    // variables
     const navigate = useNavigate();
-    // servicios
     const userService = new UserService();
     const localStorageService = new LocalStorageService();
+    const [userLogged, setUserLogged] = useState(null);
 
-    // obtengo el usuario loggeado
-    const userLogged = localStorageService.getLoggedUser();
+    useEffect(() => {
+        const user = localStorageService.getLoggedUser();
 
-    const checkAdmin = async () => {
-        const result = await userService.checkAdminUser(userLogged.id);
-        if ( result === false || result === null ) {
-            navigate('/');
+        if (!user) {
+            navigate("/login");
+            return;
         }
-    }
 
-    useEffect(()=> {
+        setUserLogged(user);
+
+        const checkAdmin = async () => {
+            try {
+                const result = await userService.checkAdminUser(user.id);
+                if (!result) {
+                    navigate("/");
+                }
+            } catch (error) {
+                console.error("Error checking admin:", error);
+                navigate("/");
+            }
+        };
+
         checkAdmin();
-    },[]);
+    }, []);
 
     return(
-        <>
-            <UsersTable userLoggedId={userLogged.id}/>
+        <>  
+            {userLogged && (
+                <UsersTable userLoggedId={userLogged.id}/>
+            )}
         </>
     );
 }

@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatForm } from "../Components/FlatForm/FlatForm";
+import { useNavigate } from "react-router-dom";
+import { LocalStorageService } from "../../../services/localStorage/localStorage";
 
 export const NewFlat = () => {
+
+  const navigate = useNavigate();
+  const localStorageService = new LocalStorageService();
+
+  useEffect(() =>{
+      if (!localStorageService.checkLoggedUser()){
+          navigate('/login');
+      }
+  })
   return (
     <>
       <div className="relative w-screen h-screen max-w-[1440px]">
