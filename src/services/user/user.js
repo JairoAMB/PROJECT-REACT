@@ -1,12 +1,11 @@
 import { data } from 'react-router-dom';
 import { db } from '../firebase/firebase.js'
-import { collection, addDoc, query, getDocs, where, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { collection, addDoc, query, getDocs, where, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 export class UserService {
     constructor () {
 
     }
-
     async createUser (user) {
         const userCollectionRef = collection(db, "Users");
         const setQuery = query(userCollectionRef, where("email","==",user.email));
@@ -67,6 +66,15 @@ export class UserService {
             return {data: users, message:'users gotten successfully'}
         }catch(error){
             return {data: null, message: 'Error getting users' };
+        }
+    }
+    async deleteUser(id) {
+        try {
+            const userDocRef = doc(db, 'Users', id);
+            await deleteDoc(userDocRef);
+            return { success: true, message: 'User deleted successfully' };
+        } catch (error) {
+            return { success: false, message: 'Error deleting user' };
         }
     }
 
