@@ -17,4 +17,9 @@ export class LocalStorageService {
             localStorage.setItem('userLogged', JSON.stringify(user));
         }
     }
+
+    checkLoggedUser(){
+        const user = localStorage.getItem('userLogged');
+        return user ? true : false;
+    }
 }

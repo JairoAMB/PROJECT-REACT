@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FlatInfo } from "./FlatInfo/FlatInfo";
 import { FlatCarrusel } from './flatCarrusel/FlatCarrusel';
 import { Reviews } from './Reviews/Reviews';
+import { LocalStorageService } from '../../../services/localStorage/localStorage';
 // libreria de componentes
 
 export const ViewFlat = () => {
@@ -10,6 +11,8 @@ export const ViewFlat = () => {
   // obtener el id del piso
   let { flatId } = useParams();
   const navigation = useNavigate();
+
+  const localStorageService = new LocalStorageService();
 
   // Si no se envia ningun flatid retornar a home
   const checkFlatId = () => {
@@ -19,8 +22,12 @@ export const ViewFlat = () => {
   }
 
   useEffect(()=>{
+    if (!localStorageService.checkLoggedUser()){
+        navigation('/login');
+    }
     checkFlatId();
   },[])
+
 
     return(
         <>  

@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FlatForm } from "../Components/FlatForm/FlatForm";
+import { LocalStorageService } from "../../../services/localStorage/localStorage";
 
 export const EditFlat = () => {
 
   // obtener el id del piso
   let { flatId } = useParams();
   const navigation = useNavigate();
+
+  const localStorageService = new LocalStorageService();
 
   // Si no se envia ningun flatid retornar a home
   const checkFlatId = () => {
@@ -16,10 +19,13 @@ export const EditFlat = () => {
   }
 
   useEffect(()=>{
+    if (!localStorageService.checkLoggedUser()){
+        navigation('/login');
+    }
     checkFlatId();
   },[])
 
-  return (
+   return (
     <>
       <div className="relative w-screen h-screen max-w-[1440px]">
         <div className="max-w-[1440px] w-full h-screen bg-editflat bg-center bg-cover blur-sm md:blur-none md:[mask-image:linear-gradient(to_left,transparent_10%,black_45%)]"></div>

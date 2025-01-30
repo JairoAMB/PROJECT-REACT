@@ -66,52 +66,6 @@ export class UserService {
         return { data: { ...userWithoutRole, id, password: '' }, message: 'User updated successfully' };
     }
 
-    async addFlatUser(userLoggedId) {
-        try {
-            const userDocRef = doc(db, "Users", userLoggedId);
-            const userSnapshot = await getDoc(userDocRef);
-
-            if (!userSnapshot.exists()) {
-                console.error(`Usuario con ID ${userLoggedId} no encontrado.`);
-                return;
-            }
-
-            await updateDoc(userDocRef, {
-                numberOfFlats: increment(1) // Incrementa en 1 el número de flats
-            });
-
-            console.log("numberOfFlats actualizado correctamente.");
-        } catch (error) {
-            console.error("Error al actualizar numberOfFlats:", error);
-        }
-    }
-
-    async minusFlatUser(userLoggedId) {
-        try {
-            const userDocRef = doc(db, "Users", userLoggedId);
-            const userSnapshot = await getDoc(userDocRef);
-
-            if (!userSnapshot.exists()) {
-                console.error(`Usuario con ID ${userLoggedId} no encontrado.`);
-                return;
-            }
-
-            const currentNumberOfFlats = userSnapshot.data().numberOfFlats || 0;
-
-            if (currentNumberOfFlats > 0) {
-                await updateDoc(userDocRef, {
-                    numberOfFlats: increment(-1) // Disminuye en 1
-                });
-
-                console.log("numberOfFlats disminuido correctamente.");
-            } else {
-                console.warn("El usuario no tiene flats para eliminar.");
-            }
-        } catch (error) {
-            console.error("Error al disminuir numberOfFlats:", error);
-        }
-    }
-
     async getUsers() {
         const usersCollectionRef = collection(db, 'Users');
         const setQuery = query(usersCollectionRef);
@@ -176,11 +130,84 @@ export class UserService {
         const userDocRef = doc(db, 'Users', userLoggedId);
         const result = await getDoc(userDocRef);
 
-        if (result.exists()) {
+        if(result.exists()){
             const userData = result.data();
-            return userData.role === 'admin';
-        }
+            if ( userData.role === 'admin') {
+                return true;
+            }else {
+                return false
+            }
+        } 
 
         return null;
+    }
+
+    async addFlatUser(userLoggedId) {
+        try {
+            const userDocRef = doc(db, "Users", userLoggedId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                console.error(`Usuario con ID ${userLoggedId} no encontrado.`);
+                return;
+            }
+
+            await updateDoc(userDocRef, {
+                numberOfFlats: increment(1) // Incrementa en 1 el número de flats
+            });
+
+            console.log("numberOfFlats actualizado correctamente.");
+        } catch (error) {
+            console.error("Error al actualizar numberOfFlats:", error);
+        }
+    }
+
+    async minusFlatUser(userLoggedId) {
+        try {
+            const userDocRef = doc(db, "Users", userLoggedId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                console.error(`Usuario con ID ${userLoggedId} no encontrado.`);
+                return;
+            }
+
+            const currentNumberOfFlats = userSnapshot.data().numberOfFlats || 0;
+
+            if (currentNumberOfFlats > 0) {
+                await updateDoc(userDocRef, {
+                    numberOfFlats: increment(-1) // Disminuye en 1
+                });
+
+                console.log("numberOfFlats disminuido correctamente.");
+            } else {
+                console.warn("El usuario no tiene flats para eliminar.");
+            }
+        } catch (error) {
+            console.error("Error al disminuir numberOfFlats:", error);
+        }
+    }
+
+    async setUserAdmin(userId, newRole) {
+        try {
+            const userDocRef = doc(db, "Users", userId);
+            const userSnapshot = await getDoc(userDocRef);
+    
+            if (!userSnapshot.exists()) {
+                console.error(`User with ID ${userId} not found.`);
+                return { success: false };
+            }
+    
+            await updateDoc(userDocRef, {
+                role: newRole
+            });
+    
+            console.log(`User role updated to ${newRole}`);
+            return { success: true };
+    
+        } catch (error) {
+            console.error("Error updating user role:", error);
+            return { success: false };
+        }
     }
 }
