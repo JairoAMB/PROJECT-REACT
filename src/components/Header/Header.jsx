@@ -8,10 +8,12 @@ import 'primeicons/primeicons.css';
 import logo from '../../assets/Img/logo.svg';
 import { LocalStorageService } from '../../services/localStorage/localStorage';
 import { UserService } from '../../services/user/user';
+import "./Header.css"
 
 export const Header = () => {
     const [user, setUser] = useState(null);
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     
     const localStorageService = new LocalStorageService();
     const userService = new UserService();
@@ -20,8 +22,14 @@ export const Header = () => {
         const loggedUser = localStorageService.getLoggedUser();
         if (loggedUser) {
             setUser(loggedUser);
+            checkIfAdmin(loggedUser.id);
         }
     }, []);
+
+    const checkIfAdmin = async (userId) => {
+        const result = await userService.checkAdminUser(userId);
+        setIsAdmin(result);
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('userLogged');
@@ -45,22 +53,26 @@ export const Header = () => {
         { label: 'Profile', icon: 'pi pi-user', command: () => window.location.href = '/profile' },
         { label: 'My Flats', icon: 'pi pi-building', command: () => window.location.href = '/myflats' },
         { label: 'Favourites', icon: 'pi pi-heart', command: () => window.location.href = '/favorites' },
+        ...(isAdmin ? [
+            { label: 'All Users', icon: 'pi pi-users', command: () => window.location.href = '/allusers' }
+        ] : [])
     ];
 
     const end = (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {user && <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>Hello, {user.firstName} {user.lastName}</span>}
+        <div className="header-actions">
+            {user && <span className="user-info">Hello, {user.firstName} {user.lastName}</span>}
             <Button label="Delete Account" icon="pi pi-trash" className="p-button-danger p-button-outlined" onClick={() => setDeleteDialog(true)} />
             <Button label="Logout" icon="pi pi-sign-out" className="p-button-outlined" onClick={handleLogout} />
         </div>
     );
 
     return (
-        <div>
+        <div className="header-container">
             <Menubar 
                 model={items} 
                 end={end} 
-                start={<img src={logo} alt="Logo" className="logo" style={{ height: '40px' }} />} 
+                start={<img src={logo} alt="Logo" className="logo" />}
+                className="menubar"
             />
 
             <Dialog 
