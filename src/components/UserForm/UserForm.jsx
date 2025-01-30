@@ -43,6 +43,9 @@ export const UserForm = ({id}) => {
 
   const getUser = async () => {
     const resultUser = await userService.getUser(id);
+    if (resultUser.data === null) {
+      navigation('/');
+  }
     setUser(resultUser.data);
   }
 
@@ -69,7 +72,8 @@ export const UserForm = ({id}) => {
         birthDate: date,
         email: emailRef.current?.value,
         password: password,
-        rol: 'user',
+        role: 'user',
+        numberOfFlats: 0,
     }
     
     if (typeForm === 'create') {

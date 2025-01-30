@@ -31,6 +31,9 @@ export const ProfileCard = ({ id }) => {
 
     const getUser = async () => {
         const resultUser = await userService.getUser(id);
+        if (resultUser.data === null) {
+            navigation('/');
+        }
         setUser(resultUser.data);
     }
 

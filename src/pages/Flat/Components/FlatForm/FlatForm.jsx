@@ -9,6 +9,7 @@ import { Button } from 'primereact/button';
 // importar los servicios de flat para crear flat en firebase
 import { FlatService } from '../../../../services/flat/flat.js'
 import { LocalStorageService } from "../../../../services/localStorage/localStorage.js";
+import { UserService } from "../../../../services/user/user.js";
 
 export const FlatForm = ({flatId}) => {
 
@@ -45,6 +46,7 @@ export const FlatForm = ({flatId}) => {
 
   // instancia de la clase flatService
   const flatService = new FlatService();
+  const userService = new UserService();
   const localStorageService = new LocalStorageService();
   const userlogged = localStorageService.getLoggedUser();
 
@@ -98,7 +100,8 @@ export const FlatForm = ({flatId}) => {
     console.log('flat',newFlat)
 
     if (typeForm === 'create') {
-      const result = await flatService.createFlat(newFlat)
+      const result = await flatService.createFlat(newFlat);
+      await userService.addFlatUser(userlogged.id);
       if (result.data !== null) {
         alert(result.message);
         navigation('/');

@@ -7,6 +7,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 // servicios
 import { FlatService } from "../../../../services/flat/flat";
+import { UserService } from "../../../../services/user/user";
 
 export const MyFlatsTable = ({ userLoggedId }) => {
 
@@ -19,6 +20,7 @@ export const MyFlatsTable = ({ userLoggedId }) => {
 
   // servicios
   const flatService = new FlatService();
+  const userService = new UserService();
 
   const getMyFlats = async () => {
     setLoading(true);
@@ -74,6 +76,7 @@ export const MyFlatsTable = ({ userLoggedId }) => {
         acceptClassName: "p-button-danger",
         accept: async () => {
             const result = await flatService.deleteFlat(flatId);
+            await userService.minusFlatUser(userLoggedId);
             if (result.data) {
                 setFlats((prevFlats) => prevFlats.filter((flat) => flat.id !== flatId));
                 toast.current.show({ severity: "success", summary: "Deleted", detail: "Flat deleted successfully", life: 3000 });

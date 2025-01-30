@@ -44,7 +44,7 @@ export class FlatService  {
         }
     }
 
-    async getFlats (filters, sortBy = 'city', sortOrder = 'asc') {
+    async getFlats (filters , sortBy = 'city', sortOrder = 'asc') {
         const flatsCollectionRef = collection(db, 'Flats');
         const conditions = [];
 
@@ -71,6 +71,18 @@ export class FlatService  {
         
         const setQuery = query(flatsCollectionRef, ...conditions);
 
+        try{
+            const resultQuery = await getDocs(setQuery);
+            const flats = resultQuery.docs.map((doc)=>({...doc.data(), id:doc.id}));
+            return {data: flats, message:'flats gotten successfully'}
+        }catch(error){
+            return {data: null, message: 'Error getting flats' };
+        }
+    }
+
+    async getAllFlats () {
+        const flatsCollectionRef = collection(db, 'Flats');
+        const setQuery = query(flatsCollectionRef);
         try{
             const resultQuery = await getDocs(setQuery);
             const flats = resultQuery.docs.map((doc)=>({...doc.data(), id:doc.id}));

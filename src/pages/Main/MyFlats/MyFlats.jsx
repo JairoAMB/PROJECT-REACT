@@ -12,7 +12,9 @@ export const MyFlats = () => {
         <>
             <div className="bg-bg_color_primary relative w-full h-full max-w-[1440px] m-auto flex flex-col  items-center">
                 myflats
-                <MyFlatsTable userLoggedId={userLoggedId.id}/>
+                <div className="w-11/12">
+                    <MyFlatsTable userLoggedId={userLoggedId.id}/>
+                </div>
             </div>
         </>
     );

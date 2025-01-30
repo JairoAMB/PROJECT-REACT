@@ -10,6 +10,7 @@ import { ViewFlat } from './pages/Flat/ViewFlat/ViewFlat';
 import { Home } from './pages/Main/Home/Home';
 import { Favorites } from './pages/Main/Favorites/Favorites';
 import { MyFlats } from './pages/Main/MyFlats/MyFlats';
+import { AllUsers } from './pages/allUsers/allUsers';
 
 function App() {
   
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/favorites" element={<Favorites/>} />
         <Route path="/myflats" element={<MyFlats />} />
+        <Route path="/allusers" element={<AllUsers />}/>
       </Routes>
     </>
   );

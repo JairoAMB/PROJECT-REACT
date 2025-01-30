@@ -128,7 +128,7 @@ export const FlatTable = ({ userLoggedId }) => {
             onChange={(e) => setFilters({ ...filters, minPrice: e.value })}
           />
           <InputNumber
-            placeholder="Min Price"
+            placeholder="Max Price"
             className="w-[100px]"
             value={filters.maxPrice}
             onChange={(e) => setFilters({ ...filters, maxPrice: e.value })}
@@ -190,7 +190,7 @@ export const FlatTable = ({ userLoggedId }) => {
   const dateAvailableBodyTemplate = (rowData) => {
     if (!rowData.dateAvailable) return "Fecha no disponible";
 
-    if (typeof rowData.yearBuilt === "object") {
+    if (typeof rowData.dateAvailable === "object") {
       const date = new Date(rowData.dateAvailable.seconds * 1000);
       const newDate = new Intl.DateTimeFormat("es-ES", {
         day: "2-digit",
